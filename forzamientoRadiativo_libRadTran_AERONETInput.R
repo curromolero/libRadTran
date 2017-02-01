@@ -45,7 +45,8 @@ uvspec_input_details <- list (fechaMedida = datosAERONET[[1]]$fechaMedidaAERONET
 
 nombreFicheroDIST <- generarFicheroDistribucionTamagnos(datosAERONET[[3]], uvspec_input_details$fechaMedida)
 nombreFicheroREFR <- generarFicheroIndiceRefraccion(datosAERONET[[4]], uvspec_input_details$fechaMedida)
-nombreFicheroAlbedo <- generarFicheroAlbedo(datosAERONET[[5]], uvspec_input_details$fechaMedida)
+nombreFicheroAOD <- generarFicheroAOD(datosAERONET[[6]], uvspec_input_details$fechaMedida)
+
 # Llamada al m?dulo Mie para generar fichero de aerosoles con los ficheros refractive_indices & size_distribution con datos AERONET
 # Lista con la informaci?n de la comparacion
 mie_input_details <- list (fechaMedida = uvspec_input_details$fechaMedida,
