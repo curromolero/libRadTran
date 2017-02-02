@@ -1,9 +1,8 @@
-generarFicheroINP_Mie <- function(mie_input_details) {
+generarFicheroINP_Mie <- function(mie_input_details, dirMedida) {
   # genera un fichero para INPUT en el paquete Mie de LibRadTran y va grabando, linea a linea, la informacion de mie_input_details
   library(RNetCDF) # Packete con funciones netCDF
-  dirINPUTfiles <- file.path('//cendat2', 'lidar', 'PROACLIM_ForzamientoRadiativo', 'Modelos', 'libRadTran', 'libRadtran-2.0.1', 'examples', fsep = .Platform$file.sep)
-  ficheroINPUT_Mie <- paste(paste('Mie', format(mie_input_details$fechaMedida, '%Y%m%d_%H%M'), sep = '_'), 'INP', sep = '.')
-  ficheroINPUT_Completo <- file.path(dirINPUTfiles, ficheroINPUT_Mie, fsep = .Platform$file.sep)
+  ficheroINPUT_Mie <- paste(paste('Mie', format(mie_input_details$fechaMedida, '%Y%m%d_%H%M'), sep = '_'), 'dat', sep = '.')
+  ficheroINPUT_Completo <- file.path(dirMedida, ficheroINPUT_Mie, fsep = .Platform$file.sep)
   fecha_generado <- paste('# Generado por el script generarFicheroINP_Mie.R, el', format(Sys.time(), '%d/%m/%y, a las %H:%M'), sep = ' ')
   cat('# Pruebas realizadas para ver el funcionamiento de libRadTran con R', fecha_generado,
       sep = '\n', file = ficheroINPUT_Completo, append = FALSE)

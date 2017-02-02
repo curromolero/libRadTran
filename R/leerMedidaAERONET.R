@@ -2,12 +2,9 @@ leerMedidaAERONET <- function(tipoFichero, nivelDatosAERONET, fechaMedida) {
   # Lee los datos AERONET guardados en ficheros netCDF para la fecha M?S CERCANA a la de medida seleccionada
   library(RNetCDF) # Packete con funciones netCDF
   library(lubridate) # Mejores funciones para fechas
-  dirFiles <- file.path('//cendat2', 'lidar', 'CIMEL AEMET', 'AOD_V2',
-                        format(fechaMedida, '%Y'), 'InversionsV2', paste0('Level', toString(nivelDatosAERONET)),
-                        fsep = .Platform$file.sep)
   nombreFichero <- paste0('CIMEL_AEMET_', tipoFichero, '_', format(fechaMedida, '%y'), '0101_', format(fechaMedida, '%y'),
                           '1231_Madrid_Version', '2', '_Level', toString(nivelDatosAERONET), '.nc')
-  dirFichero <- file.path(dirFiles, nombreFichero, fsep = .Platform$file.sep)
+  dirFichero <- file.path(file.path(getwd(), 'Data', fsep = .Platform$file.sep), nombreFichero, fsep = .Platform$file.sep)
   nc <- open.nc(dirFichero, write = FALSE)
   details <- file.inq.nc(nc)
   fechasDatosAERONET_netCDF <- var.get.nc(nc, 1) # La variable 1 es la fecha y hora en el fichero netCDF

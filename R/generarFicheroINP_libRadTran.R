@@ -1,13 +1,12 @@
-generarFicheroINP_libRadTran <- function(uvspec_input_details) {
+generarFicheroINP_libRadTran <- function(uvspec_input_details, dirMedida) {
   # genera un fichero, con detalle _Sin/Con Aerosoles, para input ewn uvspec
   # y va grabando, linea a linea, la informacion de uvspec_input_details
-  dirINPUTfiles <- file.path('//cendat2', 'lidar', 'PROACLIM_ForzamientoRadiativo', 'Modelos', 'libRadTran', 'libRadtran-2.0.1', 'examples', fsep = .Platform$file.sep)
   if (is.character(uvspec_input_details$aerosols)) {
-    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'CON_AEROSOLES.INP', sep = '_')
+    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'CON_AEROSOLES.dat', sep = '_')
   } else {
-    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'SIN_AEROSOLES.INP', sep = '_')
+    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'SIN_AEROSOLES.dat', sep = '_')
   }
-  ficheroINPUT_Completo <- file.path(dirINPUTfiles, ficheroINPUT, fsep = .Platform$file.sep)
+  ficheroINPUT_Completo <- file.path(dirMedida, ficheroINPUT, fsep = .Platform$file.sep)
   fecha_generado <- paste('# Generado por el script forzamientoRadiativo_libRadTran.R, el', format(Sys.time(), '%d/%m/%y, a las %H:%M'), sep = ' ')
   cat('# Pruebas realizadas para ver el funcionamiento de libRadTran con R', fecha_generado,
       sep = '\n', file = ficheroINPUT_Completo, append = FALSE)

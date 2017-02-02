@@ -1,8 +1,7 @@
-generarFicheroDistribucionTamagnos <- function(distTamagnosVolumen, fechaMedida) {
+generarFicheroDistribucionTamagnos <- function(distTamagnosVolumen, fechaMedida, dirMedida) {
   # Graba un fichero con la distribucion numerica calculada a partir de la de volumen proporcionada por AERONET
   # Carga la funcion de ajuste requerida
-  dirFuncion <- file.path("//cendat2", "lidar", "PROACLIM_ForzamientoRadiativo", fsep = .Platform$file.sep)
-  source(file.path(dirFuncion, "fitAERONETDistribution_bimodal.R", fsep = .Platform$file.sep))
+  source("R/fitAERONETDistribution_bimodal.R")
   # Extrae la informacion de la estructura en lista
   distActual <- data.frame(distTamagnosVolumen$tamagnos, distTamagnosVolumen$dV)
   colnames(distActual) <- c('radius', 'dV/dlnr')
@@ -28,9 +27,8 @@ generarFicheroDistribucionTamagnos <- function(distTamagnosVolumen, fechaMedida)
   # Suma los dos modos y prepara el data.frame para guardar el fichero
   NumberDist_file <- data.frame(exp(nuevoEjeX), NumberDistMode1 + NumberDistMode2)
   # Graba el fichero con nombre 
-  ficheroINPUT_Dist <- paste(paste('distTamagnos', format(fechaMedida, '%Y%m%d_%H%M'), sep = '_'), 'INP', sep = '.')
-  dirFiles <- file.path('//cendat2', 'lidar', 'PROACLIM_ForzamientoRadiativo', 'Modelos', 'libRadTran', 'libRadtran-2.0.1', 'examples', fsep = .Platform$file.sep)
-  dirINPUT_Dist <- file.path(dirFiles, ficheroINPUT_Dist, fsep = .Platform$file.sep)
+  ficheroINPUT_Dist <- paste(paste('distTamagnos', format(fechaMedida, '%Y%m%d_%H%M'), sep = '_'), 'dat', sep = '.')
+  dirINPUT_Dist <- file.path(dirMedida, ficheroINPUT_Dist, fsep = .Platform$file.sep)
   write.table(NumberDist_file, file = dirINPUT_Dist, append = FALSE, quote = TRUE, sep = " ", eol = "\n", na = "NA",
               dec = ".", row.names = FALSE, col.names = FALSE, qmethod = c("escape", "double"), fileEncoding = "")
   return(ficheroINPUT_Dist)
