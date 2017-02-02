@@ -9,8 +9,8 @@ generarFicheroAOD <- function(valoresAOD_AERONET, fechaMedida, dirMedida) {
   logAOD_interpolated <- predict(lin.logAOD, newdata = AOD_file)
   AOD_file$AOD <- exp(logAOD_interpolated)
   # Comprobacion de las interpolaciones
-  plot(AOD_file$wvl, AOD_file$AOD)
-  points(valoresAOD_AERONET$wvl, valoresAOD_AERONET$AOT, col = 'red')
+  # plot(AOD_file$wvl, AOD_file$AOD)
+  # points(valoresAOD_AERONET$wvl, valoresAOD_AERONET$AOT, col = 'red')
   # Graba el fichero con los AOD en todo el rango espectral
   ficheroINPUT_AOD <- paste(paste('AOD', format(fechaMedida, '%Y%m%d_%H%M'), sep = '_'), 'dat', sep = '.')
   dirINPUT_AOD <- file.path(dirMedida, ficheroINPUT_AOD, fsep = .Platform$file.sep)

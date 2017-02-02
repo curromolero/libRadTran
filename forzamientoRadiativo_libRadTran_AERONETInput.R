@@ -81,7 +81,7 @@ ficheroINP_ConAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, di
 OutFile_ConAerosoles <- paste(paste('Output', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'ConAerosoles', sep = '_'), 'dat', sep = '.')
 (textoParaPegarEnCygwin <- paste('(../bin/uvspec < ', ficheroINP_ConAerosoles, ' > ', OutFile_ConAerosoles, ') >&', 'verbose.txt', sep = ' '))
 
-# Comparaci?n de flujos AERONET vs libRadTran
+# Comparacion de flujos AERONET vs libRadTran
 
 # Procesar ficheros de salida generados
 salidalibRadTran_Sin_Aerosoles <- read.table(file.path(dirFiles, OutFile_SinAerosoles, fsep = .Platform$file.sep))
@@ -95,45 +95,45 @@ diffConYSinAerosoles <- salidalibRadTran_Con_Aerosoles - salidalibRadTran_Sin_Ae
 # Total downward irradiance eglo = edir + edn. Total mean intensity = uavgdir + uavgdn + uavgup
 # type_output <- paste('output_process', 'sum', sep = ' ') # Opciones: 
 
-datosAERONET[[2]]$`DownwardFlux(BOA)`-datosAERONET[[2]]$`UpwardFlux(BOA)`
-
-datosAERONET[[2]]$`DownwardFlux(TOA)`-datosAERONET[[2]]$`UpwardFlux(TOA)`
-
-
-datosAERONET[[2]]$`DownwardFlux442-T`
-
-
-
-
-
-# libRadTran output vs wavelength
-tidy_salidalibRadTran <- melt(salidalibRadTran_Con_Aerosoles, id = 1)
-ggplot(tidy_salidalibRadTran, aes(x = tidy_salidalibRadTran$V1)) +
-  geom_point(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) +
-  geom_line(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) + 
-  theme(legend.title=element_blank()) + 
-  scale_y_continuous(name = "salida libRadTran") +
-  ggtitle("salida libRadTran") +
-  theme(plot.title = element_text(size = 12, face = "bold", margin = margin(10, 0, 10, 0))) +
-  scale_x_continuous(name = "wavelength (nm)")
-
-tidy_salidalibRadTran <- melt(salidalibRadTran_Sin_Aerosoles, id = 1)
-ggplot(tidy_salidalibRadTran, aes(x = tidy_salidalibRadTran$V1)) +
-  geom_point(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) +
-  geom_line(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) + 
-  theme(legend.title=element_blank()) + 
-  scale_y_continuous(name = "salida libRadTran") +
-  ggtitle("salida libRadTran") +
-  theme(plot.title = element_text(size = 12, face = "bold", margin = margin(10, 0, 10, 0))) +
-  scale_x_continuous(name = "wavelength (nm)")
-
-combined_salidalibRadTran <- data.frame(salidalibRadTran_Sin_Aerosoles$V1, salidalibRadTran_Sin_Aerosoles$V3, salidalibRadTran_Con_Aerosoles$V3)
-tidy_salidalibRadTran <- melt(combined_salidalibRadTran, id = 1)
-ggplot(tidy_salidalibRadTran, aes(x = tidy_salidalibRadTran$salidalibRadTran_Sin_Aerosoles.V1)) +
-  geom_point(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) +
-  geom_line(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) + 
-  theme(legend.title=element_blank()) + 
-  scale_y_continuous(name = "salida libRadTran") +
-  ggtitle("salida libRadTran") +
-  theme(plot.title = element_text(size = 12, face = "bold", margin = margin(10, 0, 10, 0))) +
-  scale_x_continuous(name = "wavelength (nm)")
+# datosAERONET[[2]]$`DownwardFlux(BOA)`-datosAERONET[[2]]$`UpwardFlux(BOA)`
+# 
+# datosAERONET[[2]]$`DownwardFlux(TOA)`-datosAERONET[[2]]$`UpwardFlux(TOA)`
+# 
+# 
+# datosAERONET[[2]]$`DownwardFlux442-T`
+# 
+# 
+# 
+# 
+# 
+# # libRadTran output vs wavelength
+# tidy_salidalibRadTran <- melt(salidalibRadTran_Con_Aerosoles, id = 1)
+# ggplot(tidy_salidalibRadTran, aes(x = tidy_salidalibRadTran$V1)) +
+#   geom_point(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) +
+#   geom_line(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) + 
+#   theme(legend.title=element_blank()) + 
+#   scale_y_continuous(name = "salida libRadTran") +
+#   ggtitle("salida libRadTran") +
+#   theme(plot.title = element_text(size = 12, face = "bold", margin = margin(10, 0, 10, 0))) +
+#   scale_x_continuous(name = "wavelength (nm)")
+# 
+# tidy_salidalibRadTran <- melt(salidalibRadTran_Sin_Aerosoles, id = 1)
+# ggplot(tidy_salidalibRadTran, aes(x = tidy_salidalibRadTran$V1)) +
+#   geom_point(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) +
+#   geom_line(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) + 
+#   theme(legend.title=element_blank()) + 
+#   scale_y_continuous(name = "salida libRadTran") +
+#   ggtitle("salida libRadTran") +
+#   theme(plot.title = element_text(size = 12, face = "bold", margin = margin(10, 0, 10, 0))) +
+#   scale_x_continuous(name = "wavelength (nm)")
+# 
+# combined_salidalibRadTran <- data.frame(salidalibRadTran_Sin_Aerosoles$V1, salidalibRadTran_Sin_Aerosoles$V3, salidalibRadTran_Con_Aerosoles$V3)
+# tidy_salidalibRadTran <- melt(combined_salidalibRadTran, id = 1)
+# ggplot(tidy_salidalibRadTran, aes(x = tidy_salidalibRadTran$salidalibRadTran_Sin_Aerosoles.V1)) +
+#   geom_point(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) +
+#   geom_line(aes(y = tidy_salidalibRadTran$value, colour = factor(tidy_salidalibRadTran$variable))) + 
+#   theme(legend.title=element_blank()) + 
+#   scale_y_continuous(name = "salida libRadTran") +
+#   ggtitle("salida libRadTran") +
+#   theme(plot.title = element_text(size = 12, face = "bold", margin = margin(10, 0, 10, 0))) +
+#   scale_x_continuous(name = "wavelength (nm)")
