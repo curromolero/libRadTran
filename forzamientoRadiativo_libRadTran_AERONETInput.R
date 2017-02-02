@@ -10,7 +10,7 @@ source("R/generarFicheroINP_Mie.R")
 source("R/generarFicheroINP_libRadTran.R")
 
 # Medida seleccionada
-fechaMedida <- as.POSIXlt(strptime(c("28/06/2013 16:58"), "%d/%m/%Y %H:%M", tz = "UTC"))
+fechaMedida <- as.POSIXlt(strptime(c("17/08/2012 17:50"), "%d/%m/%Y %H:%M", tz = "UTC"))
 
 # Crea un directorio para poner los ficheros generados, o utiliza el ya existente, si existe
 dirFiles <- file.path(getwd(), 'Output4lRT', fsep = .Platform$file.sep)
