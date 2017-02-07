@@ -11,6 +11,12 @@ generarFicheroINP_libRadTran <- function(uvspec_input_details, dirMedida) {
   cat('# Pruebas realizadas para ver el funcionamiento de libRadTran con R', fecha_generado,
       sep = '\n', file = ficheroINPUT_Completo, append = FALSE)
   
+  # Data files
+  # if (is.character(uvspec_input_details$data_files_path)) {
+  #   data_files <-  paste('data_files_path', uvspec_input_details$data_files_path, sep = ' ')
+  #   cat('', '# Location of data files', data_files, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)
+  # }
+  
   # Atmosphere (Temperature, pressure, air density, concentrations of O3, H2O, CO2 & NO2 profiles)
   if (is.character(uvspec_input_details$atmosphere)) {
     molecular_atmosphere <-  paste('atmosphere_file', paste0('../data/atmmod/', uvspec_input_details$atmosphere), sep = ' ')
@@ -49,9 +55,15 @@ generarFicheroINP_libRadTran <- function(uvspec_input_details, dirMedida) {
     cat('', '# Altitude of station', altitude, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)
   }
   
+  # TOA (zout = 120 km - Altitude (Km))
+  if (!uvspec_input_details$TOA) {
+    zout <- paste('zout', 120 - uvspec_input_details$altitude, sep = ' ')
+    cat('', '# TOA calculation', zout, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)
+  }
+  
   # Albedo
   if (is.character(uvspec_input_details$albedo)) {
-    albedo_txt <- paste('albedo', uvspec_input_details$albedo, sep = ' ')
+    albedo_txt <- paste('albedo_file', uvspec_input_details$albedo, sep = ' ')
     cat('', '# Surface Albedo', albedo_txt, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)
   }
   
@@ -96,17 +108,22 @@ generarFicheroINP_libRadTran <- function(uvspec_input_details, dirMedida) {
     # cat('', '# El fichero de aerosoles es:', aerosols_file, file = ficheroINPUT_Completo, sep = '\n', append = TRUE) 
   }
   
-  if (length(uvspec_input_details$refrIndex) == 2) {
-    # Specify refractive Index
-    refrIndex <- paste('aerosol_refrac_index', toString(uvspec_input_details$refrIndex[1]), toString(uvspec_input_details$refrIndex[2]), sep = ' ')
-    cat("", "# Specify refractive Index", refrIndex, file = ficheroINPUT_Completo, sep = "\n", append = TRUE)
-  }
   
-  if (is.character(uvspec_input_details$numDist_file)) {
-    # Specify size distribution in Number
-    numDist <- paste('aerosol_sizedist_file', paste0('../examples/', mie_input_details$numDist_file), sep = ' ')
-    cat("", "# Specify size distribution in Number", numDist, file = ficheroINPUT_Completo,sep = "\n", append = TRUE)
+  if (!is.null(uvspec_input_details$aerosol_angstrom)) {
+    aerosols_scale <- paste('aerosol_angstrom', toString(uvspec_input_details$aerosol_angstrom[1]), toString(uvspec_input_details$aerosol_angstrom[2]),  sep = ' ')
+    cat('', '# Escala los espesores ópticos:', aerosols_scale, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)  
   }
+  # if (length(uvspec_input_details$refrIndex) == 2) {
+  #   # Specify refractive Index
+  #   refrIndex <- paste('aerosol_refrac_index', toString(uvspec_input_details$refrIndex[1]), toString(uvspec_input_details$refrIndex[2]), sep = ' ')
+  #   cat("", "# Specify refractive Index", refrIndex, file = ficheroINPUT_Completo, sep = "\n", append = TRUE)
+  # }
+  # 
+  # if (is.character(uvspec_input_details$numDist_file)) {
+  #   # Specify size distribution in Number
+  #   numDist <- paste('aerosol_sizedist_file', paste0('../examples/', mie_input_details$numDist_file), sep = ' ')
+  #   cat("", "# Specify size distribution in Number", numDist, file = ficheroINPUT_Completo,sep = "\n", append = TRUE)
+  # }
   
   # Type of output: integrate, sum
   if (is.character(uvspec_input_details$output_process)) {

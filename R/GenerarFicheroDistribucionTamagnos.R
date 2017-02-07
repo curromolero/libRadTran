@@ -7,7 +7,7 @@ generarFicheroDistribucionTamagnos <- function(distTamagnosVolumen, fechaMedida,
   colnames(distActual) <- c('radius', 'dV/dlnr')
   # Ajusta los modos de la distribucion en volumen y comprueba el resultado
   fitResults <- fitAERONETDistribution_bimodal(distActual)
-  nuevoEjeX <- seq(-10, 3, by = 0.01)
+  nuevoEjeX <- seq(-10, 3, by = 0.1)
   modo1 <- fitResults$C1 * exp(-(nuevoEjeX-fitResults$mean1)**2/(2 * fitResults$sigma1**2))
   modo2 <- fitResults$C2 * exp(-(nuevoEjeX-fitResults$mean2)**2/(2 * fitResults$sigma2**2))
   # plot(log(distActual$radius), distActual$`dV/dlnr`, "b", xlab = "log particle radius, log(r)", ylab = "dV/dlogr")

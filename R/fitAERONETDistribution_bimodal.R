@@ -1,3 +1,12 @@
+#' fit the volume distribution from AERONET using two lognormals distributions
+#' 
+#' @param distAERONET a distribution provided by AERONET, two columns with size (r) and dV/dlnr values
+#' @return results_df a data.frame with the parameters of the two lognormals (Cn, meann & sigman, with n = 1,2) plus fit parameters (residuals, R-squared, AIC & SW-test)
+#' @examples 
+#' distActual <- data.frame(distTamagnosVolumen$tamagnos, distTamagnosVolumen$dV)
+#' colnames(distActual) <- c('radius', 'dV/dlnr')
+#' fitResults <- fitAERONETDistribution_bimodal(distActual)
+#' 
 fitAERONETDistribution_bimodal <- function(distAERONET, ...) {
   # Devuelve un data.frame con los resultados
   results_df <- data.frame(matrix(data = NA, nrow = 1, ncol = 10))
