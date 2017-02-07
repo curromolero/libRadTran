@@ -15,12 +15,13 @@ forzamientoRadiativo_libRadTran_AERONETInput <- function(fechaMedida) {
   source("R/generarFicheroINP_libRadTran.R")
   
   # Medida seleccionada
-  # fechaMedida <- as.POSIXlt(strptime(c("11/09/2012 07:14"), "%d/%m/%Y %H:%M", tz = "UTC"))
+  # fechaMedida <- as.POSIXlt(strptime(c("17/08/2012 06:51"), "%d/%m/%Y %H:%M", tz = "UTC"))
   
   # Crea un directorio para poner los ficheros generados, o utiliza el ya existente, si existe
   dirFiles <- file.path('//cendat2', 'lidar', 'PROACLIM_ForzamientoRadiativo', 'Modelos', 'libRadTran', 'libRadtran-2.0.1', 'data', 'AERONET', fsep = .Platform$file.sep)
-  dirMedida <- file.path(dirFiles, paste('AERONET', format(fechaMedida, '%Y%m%d_%H%M'), sep = '_'))
-  ifelse(!dir.exists(dirMedida), dir.create(dirMedida), FALSE)
+  dirMedida <- paste('AERONET', format(fechaMedida, '%Y%m%d_%H%M'), sep = '_')
+  dirMedida_absoluto <- file.path(dirFiles, dirMedida)
+  ifelse(!dir.exists(dirMedida_absoluto), dir.create(dirMedida_absoluto), FALSE)
   
   # Lectura de datos AERONET, generacion de ficheros refractive_indices & size_distribution
   tipoFichero <- 'DUBOVIKfile'
@@ -31,12 +32,11 @@ forzamientoRadiativo_libRadTran_AERONETInput <- function(fechaMedida) {
   # Copia los ficheros de albedo, que se generan con Matlab para el caso de MODIS y no pueden generarse sobre la marcha
   dirAlbedo <- file.path('//cendat2', 'lidar', 'Satelites', 'MODIS', 'Datos', fsep = .Platform$file.sep)
   list.of.files <- list.files(dirAlbedo, paste0('*', format(fechaMedida, '%Y%m%d_%H%M'), '*'))
-  file.copy(file.path(dirAlbedo, list.of.files), dirMedida)
+  file.copy(file.path(dirAlbedo, list.of.files), dirMedida_absoluto)
   ficherosGenerados <- list(list.of.files)
   
   # Lista con la informacion de la comparacion
   uvspec_input_details <- list (fechaMedida = datosAERONET[[1]]$fechaMedidaAERONET,
-                                data_files_path = dirMedida,
                                 atmosphere = 'afglmw.dat',
                                 mol_abs_param = NULL, # 'kato2' o 'reptran fine' 
                                 solar_source = 'NewGuey2003.dat',  # 'atlas_plus_modtran',
@@ -58,11 +58,11 @@ forzamientoRadiativo_libRadTran_AERONETInput <- function(fechaMedida) {
                                 refrIndex = NULL,
                                 numDist_file = NULL)
   
-  nombreFicheroDIST <- generarFicheroDistribucionTamagnos(datosAERONET[[3]], uvspec_input_details$fechaMedida, dirMedida)
+  nombreFicheroDIST <- generarFicheroDistribucionTamagnos(datosAERONET[[3]], uvspec_input_details$fechaMedida, dirMedida_absoluto)
   ficherosGenerados[[length(ficherosGenerados)+1]] <- nombreFicheroDIST
-  nombreFicheroREFR <- generarFicheroIndiceRefraccion(datosAERONET[[4]], uvspec_input_details$fechaMedida, dirMedida)
+  nombreFicheroREFR <- generarFicheroIndiceRefraccion(datosAERONET[[4]], uvspec_input_details$fechaMedida, dirMedida_absoluto)
   ficherosGenerados[[length(ficherosGenerados)+1]] <- nombreFicheroREFR
-  nombreFicheroAOD <- generarFicheroAOD(datosAERONET[[6]], uvspec_input_details$fechaMedida, dirMedida)
+  nombreFicheroAOD <- generarFicheroAOD(datosAERONET[[6]], uvspec_input_details$fechaMedida, dirMedida_absoluto)
   ficherosGenerados[[length(ficherosGenerados)+1]] <- nombreFicheroAOD
   
   # Llamada al modulo Mie para generar fichero de aerosoles con los ficheros refractive_indices & size_distribution con datos AERONET
@@ -72,14 +72,15 @@ forzamientoRadiativo_libRadTran_AERONETInput <- function(fechaMedida) {
                              refrIndex_file = nombreFicheroREFR,
                              numDist_file = nombreFicheroDIST,
                              output_user = 'netcdf')
-  ficheroINP_Mie <- generarFicheroINP_Mie(mie_input_details, dirMedida)
+  ficheroINP_Mie <- generarFicheroINP_Mie(mie_input_details, dirMedida_absoluto)
   # (textoParaPegarEnCygwin <- paste('(../bin/mie < ', ficheroINP_Mie, ') >&', 'verbose.txt', sep = ' '))
   # Llamada al modulo uvspec para calcular la transferencia radiativa con y sin aerosoles
   
   # Sin aerosoles
-  ficheroINP_SinAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, dirMedida) # Si no se pone fichero Sin Aerosoles, lo genera
+  ficheroINP_SinAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, 'BOA', dirMedida_absoluto, dirMedida)
+  ficheroINP_SinAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, 'TOA', dirMedida_absoluto, dirMedida)
   OutFile_SinAerosoles <- paste(paste('Output', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'SinAerosoles', sep = '_'), 'dat', sep = '.')
-  (textoParaPegarEnCygwin <- paste('(../bin/uvspec < ', file.path(dirMedida, ficheroINP_SinAerosoles), ' > ', file.path(dirMedida, OutFile_SinAerosoles), ') >&', 'verbose.txt', sep = ' '))
+  (textoParaPegarEnCygwin <- paste('(../bin/uvspec < ', file.path('../data/AERONET/', dirMedida, ficheroINP_SinAerosoles), ' > ', file.path('../data/AERONET/', dirMedida, OutFile_SinAerosoles), ') >&', 'verbose.txt', sep = ' '))
   # Llama a libRadTran desde R usando Cygwin. Aun no funciona, pegar en Cygwin para obtener el fichero de salida
   # textoLlamada <- paste('cmd.exe', '/c', 'c:\\cygwin64\\bin\\env', '/cygdrive/c/cygwin64/home/u4627/ejecutarSH_SinAerosoles.sh', sep = ' ')
   # system(textoLlamada, intern = TRUE)
@@ -93,13 +94,14 @@ forzamientoRadiativo_libRadTran_AERONETInput <- function(fechaMedida) {
   # libRadTran define Tau = Beta*lambda^-alfa, pero Angstrom es Tau(lambda)/Tau(Lambda0) = (lambda/Lambda0)^-alfa, luego Beta = Tau(Lambda0)*Lambda0^alfa y se calcula para 440nm
   # 0.44 micras en realidad, porque aerosol_angstrom lo toma en micras (p. 75 del manual)
   
-  ficheroINP_ConAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, dirMedida) # Si se pone fichero Sin Aerosoles, genera uno equivalente con aerosoles
+  ficheroINP_ConAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, 'BOA', dirMedida_absoluto, dirMedida) # Si se pone fichero Sin Aerosoles, genera uno equivalente con aerosoles
+  ficheroINP_ConAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, 'TOA', dirMedida_absoluto, dirMedida)
   OutFile_ConAerosoles <- paste(paste('Output', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'ConAerosoles', sep = '_'), 'dat', sep = '.')
-  (textoParaPegarEnCygwin <- paste('(../bin/uvspec < ', file.path(dirMedida, ficheroINP_ConAerosoles), ' > ', file.path(dirMedida, OutFile_ConAerosoles), ') >&', 'verbose.txt', sep = ' '))
+  (textoParaPegarEnCygwin <- paste('(../bin/uvspec < ', file.path('../data/AERONET', dirMedida, ficheroINP_ConAerosoles), ' > ', file.path('../data/AERONET', dirMedida, OutFile_ConAerosoles), ') >&', 'verbose.txt', sep = ' '))
   
   # Guarda los resultados de los ajustes para estudiarlos luego
   nombreFichero <- paste0('Dia_', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'h.html')
-  render(file.path(getwd(), 'R', 'informeFicherosInputLibRadTran.Rmd', fsep = .Platform$file.sep), output_file = nombreFichero, output_dir = dirMedida)
+  render(file.path(getwd(), 'R', 'informeFicherosInputLibRadTran.Rmd', fsep = .Platform$file.sep), output_file = nombreFichero, output_dir = dirMedida_absoluto)
   
   
   # Comparacion de flujos AERONET vs libRadTran

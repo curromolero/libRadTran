@@ -1,21 +1,15 @@
-generarFicheroINP_libRadTran <- function(uvspec_input_details, dirMedida) {
+generarFicheroINP_libRadTran <- function(uvspec_input_details, nivel, dirMedida_absoluto, dirMedida) {
   # genera un fichero, con detalle _Sin/Con Aerosoles, para input ewn uvspec
   # y va grabando, linea a linea, la informacion de uvspec_input_details
   if (is.character(uvspec_input_details$aerosols)) {
-    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'CON_AEROSOLES.dat', sep = '_')
+    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), nivel, 'CON_AEROSOLES.dat', sep = '_')
   } else {
-    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'SIN_AEROSOLES.dat', sep = '_')
+    ficheroINPUT <- paste('InputFile', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), nivel, 'SIN_AEROSOLES.dat', sep = '_')
   }
-  ficheroINPUT_Completo <- file.path(dirMedida, ficheroINPUT, fsep = .Platform$file.sep)
+  ficheroINPUT_Completo <- file.path(dirMedida_absoluto, ficheroINPUT, fsep = .Platform$file.sep)
   fecha_generado <- paste('# Generado por el script forzamientoRadiativo_libRadTran.R, el', format(Sys.time(), '%d/%m/%y, a las %H:%M'), sep = ' ')
   cat('# Pruebas realizadas para ver el funcionamiento de libRadTran con R', fecha_generado,
       sep = '\n', file = ficheroINPUT_Completo, append = FALSE)
-  
-  # Data files
-  # if (is.character(uvspec_input_details$data_files_path)) {
-  #   data_files <-  paste('data_files_path', uvspec_input_details$data_files_path, sep = ' ')
-  #   cat('', '# Location of data files', data_files, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)
-  # }
   
   # Atmosphere (Temperature, pressure, air density, concentrations of O3, H2O, CO2 & NO2 profiles)
   if (is.character(uvspec_input_details$atmosphere)) {
@@ -56,14 +50,14 @@ generarFicheroINP_libRadTran <- function(uvspec_input_details, dirMedida) {
   }
   
   # TOA (zout = 120 km - Altitude (Km))
-  if (!uvspec_input_details$TOA) {
+  if (nivel == 'TOA') {
     zout <- paste('zout', 120 - uvspec_input_details$altitude, sep = ' ')
     cat('', '# TOA calculation', zout, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)
   }
   
   # Albedo
   if (is.character(uvspec_input_details$albedo)) {
-    albedo_txt <- paste('albedo_file', uvspec_input_details$albedo, sep = ' ')
+    albedo_txt <- paste('albedo_file', file.path('../data/AERONET', dirMedida, uvspec_input_details$albedo), sep = ' ')
     cat('', '# Surface Albedo', albedo_txt, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)
   }
   

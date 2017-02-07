@@ -23,8 +23,8 @@ fechaMedida
 AOT vs wvl:
 
 ```{r AOTvswvl, echo=FALSE}
-AOD_file <- list.files(dirMedida, paste0('AOD_', '*'))
-AOD.data <- read.table(file.path(dirMedida, AOD_file))
+AOD_file <- list.files(dirMedida_absoluto, paste0('AOD_', '*'))
+AOD.data <- read.table(file.path(dirMedida_absoluto, AOD_file))
 plot(AOD.data[ ,1], AOD.data[ ,2])
 points(datosAERONET[[6]]$wvl, datosAERONET[[6]]$AOT, col = 'red')
 ```
@@ -32,8 +32,8 @@ points(datosAERONET[[6]]$wvl, datosAERONET[[6]]$AOT, col = 'red')
 RI vs wvl:
 
 ```{r RIvswvl, echo=FALSE}
-RI_file <- list.files(dirMedida, paste0('indicesRef_', '*'))
-RI.data <- read.table(file.path(dirMedida, RI_file))
+RI_file <- list.files(dirMedida_absoluto, paste0('indicesRef_', '*'))
+RI.data <- read.table(file.path(dirMedida_absoluto, RI_file))
 plot(RI.data[ ,1], RI.data[ ,2])
 points(datosAERONET[[4]]$wvl, datosAERONET[[4]]$REFR, col = 'red')
 plot(RI.data[ ,1], RI.data[ ,3])
@@ -43,18 +43,18 @@ points(datosAERONET[[4]]$wvl, datosAERONET[[4]]$REFI, col = 'red')
 Distribuciones de tamagnos:
 
 ```{r VolvsSize, echo=FALSE}
-SD_file <- list.files(dirMedida, paste0('distTamagnos_', '*'))
-SD.data <- read.table(file.path(dirMedida, SD_file))
+SD_file <- list.files(dirMedida_absoluto, paste0('distTamagnos_', '*'))
+SD.data <- read.table(file.path(dirMedida_absoluto, SD_file))
 plot(SD.data[ ,1], SD.data[ ,2], log = "xy")
 ```
 
 Albedos vs wvl:
 
 ```{r Albedosvswvl, echo=FALSE}
-albedo_AERONET_file <- list.files(dirMedida, paste0('albedo_AERONET_', '*'))
-albedo_AERONET.data <- read.table(file.path(dirMedida, albedo_AERONET_file))
-albedo_MODIS_file <- list.files(dirMedida, paste0('albedo_MODIS_', '*'))
-albedo_MODIS.data <- read.table(file.path(dirMedida, albedo_MODIS_file))
+albedo_AERONET_file <- list.files(dirMedida_absoluto, paste0('albedo_AERONET_', '*'))
+albedo_AERONET.data <- read.table(file.path(dirMedida_absoluto, albedo_AERONET_file))
+albedo_MODIS_file <- list.files(dirMedida_absoluto, paste0('albedo_MODIS_', '*'))
+albedo_MODIS.data <- read.table(file.path(dirMedida_absoluto, albedo_MODIS_file))
 plot(albedo_AERONET.data[ ,1], albedo_AERONET.data[ ,2])
 points(albedo_MODIS.data[ ,1], albedo_MODIS.data[ ,2], col = 'red')
 ```
