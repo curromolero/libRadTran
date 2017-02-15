@@ -14,8 +14,8 @@ forzamientoRadiativo_libRadTran_AERONETInput <- function(fechaMedida) {
   source("R/generarFicheroINP_Mie.R")
   source("R/generarFicheroINP_libRadTran.R")
   
-  # Medida seleccionada
-  # fechaMedida <- as.POSIXlt(strptime(c("17/08/2012 06:51"), "%d/%m/%Y %H:%M", tz = "UTC"))
+  # Medida para probar la función, comentar para usar desde otro script que la proporcione
+  fechaMedida <- as.POSIXlt(strptime(c("17/08/2012 06:51"), "%d/%m/%Y %H:%M", tz = "UTC"))
   
   # Crea un directorio para poner los ficheros generados, o utiliza el ya existente, si existe
   dirFiles <- file.path('//cendat2', 'lidar', 'PROACLIM_ForzamientoRadiativo', 'Modelos', 'libRadTran', 'libRadtran-2.0.1', 'data', 'AERONET', fsep = .Platform$file.sep)
@@ -79,18 +79,16 @@ forzamientoRadiativo_libRadTran_AERONETInput <- function(fechaMedida) {
   # Sin aerosoles
   ficheroINP_SinAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, 'BOA', dirMedida_absoluto, dirMedida)
   ficheroINP_SinAerosoles <- generarFicheroINP_libRadTran(uvspec_input_details, 'TOA', dirMedida_absoluto, dirMedida)
-  OutFile_SinAerosoles <- paste(paste('Output', format(uvspec_input_details$fechaMedida, '%Y%m%d_%H%M'), 'SinAerosoles', sep = '_'), 'dat', sep = '.')
-  (textoParaPegarEnCygwin <- paste('(../bin/uvspec < ', file.path('../data/AERONET/', dirMedida, ficheroINP_SinAerosoles), ' > ', file.path('../data/AERONET/', dirMedida, OutFile_SinAerosoles), ') >&', 'verbose.txt', sep = ' '))
   # Llama a libRadTran desde R usando Cygwin. Aun no funciona, pegar en Cygwin para obtener el fichero de salida
   # textoLlamada <- paste('cmd.exe', '/c', 'c:\\cygwin64\\bin\\env', '/cygdrive/c/cygwin64/home/u4627/ejecutarSH_SinAerosoles.sh', sep = ' ')
-  # system(textoLlamada, intern = TRUE)
+  # shell(textoLlamada)
   
   
   # Con aerosoles
   uvspec_input_details$aerosols <- paste(paste0("Output_", unlist(strsplit(ficheroINP_Mie,  "[.]"))[1], 'mie'), 'CDF', sep = '.')
   # uvspec_input_details$refrIndex <- c(datosAERONET[[4]]$REFR[1], datosAERONET[[4]]$REFI[1]) # REFR & REFI para 442 nm
   # uvspec_input_details$numDist_file <- nombreFicheroDIST
-  uvspec_input_details$aerosol_angstrom <- c(datosAERONET[[1]]$`alpha440-870`, datosAERONET[[1]]$`tau440(measured)`*(440/1000)^datosAERONET[[1]]$`alpha440-870`)
+  # uvspec_input_details$aerosol_angstrom <- c(datosAERONET[[1]]$`alpha440-870`, datosAERONET[[1]]$`tau440(measured)`*(440/1000)^datosAERONET[[1]]$`alpha440-870`)
   # libRadTran define Tau = Beta*lambda^-alfa, pero Angstrom es Tau(lambda)/Tau(Lambda0) = (lambda/Lambda0)^-alfa, luego Beta = Tau(Lambda0)*Lambda0^alfa y se calcula para 440nm
   # 0.44 micras en realidad, porque aerosol_angstrom lo toma en micras (p. 75 del manual)
   

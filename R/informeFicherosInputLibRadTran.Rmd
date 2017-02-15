@@ -22,7 +22,7 @@ fechaMedida
 
 AOT vs wvl:
 
-```{r AOTvswvl, echo=FALSE}
+```{r AOTvswvl, echo=FALSE, fig.cap = "AOT vs wavelength"}
 AOD_file <- list.files(dirMedida_absoluto, paste0('AOD_', '*'))
 AOD.data <- read.table(file.path(dirMedida_absoluto, AOD_file))
 plot(AOD.data[ ,1], AOD.data[ ,2])

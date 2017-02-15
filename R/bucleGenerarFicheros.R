@@ -32,6 +32,6 @@ for (i in 1:length(diasRelevantesArantxa)) {
   }
 }
 
-for (i in 19:length(indicesDiasRelevantes)) {
-  forzamientoRadiativo_libRadTran_AERONETInput(fechasDatosAERONET[indicesDiasRelevantes[i]])  
+for (i in 1:length(indicesDiasRelevantes)) {
+  generarFicheros_inputlibRadTran_informacionAERONET(fechasDatosAERONET[indicesDiasRelevantes[i]])  
 }

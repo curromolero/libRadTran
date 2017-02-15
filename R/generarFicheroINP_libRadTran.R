@@ -102,11 +102,15 @@ generarFicheroINP_libRadTran <- function(uvspec_input_details, nivel, dirMedida_
     # cat('', '# El fichero de aerosoles es:', aerosols_file, file = ficheroINPUT_Completo, sep = '\n', append = TRUE) 
   }
   
-  
-  if (!is.null(uvspec_input_details$aerosol_angstrom)) {
-    aerosols_scale <- paste('aerosol_angstrom', toString(uvspec_input_details$aerosol_angstrom[1]), toString(uvspec_input_details$aerosol_angstrom[2]),  sep = ' ')
-    cat('', '# Escala los espesores ópticos:', aerosols_scale, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)  
+  if (!is.null(uvspec_input_details$aerosol_perfil)) {
+    aerosols_profile <- paste('aerosol_file', 'explicit', file.path('../data/AERONET', dirMedida, uvspec_input_details$aerosol_perfil),  sep = ' ')
+    cat('', '# Perfil de aerosoles:', aerosols_profile, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)  
   }
+  
+  # if (!is.null(uvspec_input_details$aerosol_angstrom)) {
+  #   aerosols_scale <- paste('aerosol_angstrom', toString(uvspec_input_details$aerosol_angstrom[1]), toString(uvspec_input_details$aerosol_angstrom[2]),  sep = ' ')
+  #   cat('', '# Escala los espesores ópticos:', aerosols_scale, file = ficheroINPUT_Completo, sep = '\n', append = TRUE)  
+  # }
   # if (length(uvspec_input_details$refrIndex) == 2) {
   #   # Specify refractive Index
   #   refrIndex <- paste('aerosol_refrac_index', toString(uvspec_input_details$refrIndex[1]), toString(uvspec_input_details$refrIndex[2]), sep = ' ')
